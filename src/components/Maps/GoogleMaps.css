@@ -1,0 +1,8 @@
+.geolocate {
+    position: absolute;
+    z-index: 2;
+    bottom: 0;
+    left: 1rem;
+    margin: 0;
+    padding: 0;
+}

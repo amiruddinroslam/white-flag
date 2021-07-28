@@ -7,32 +7,72 @@
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+h2.white-flag-logo {
+  position: absolute;
+  z-index: 2;
+  top: 1rem;
+  left: 1rem;
+  margin: 0;
+  padding: 0;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.button-sets {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  z-index: 2;
+  max-width: 1000px;
+  height: 50px;
 }
 
-.App-link {
-  color: #61dafb;
+.button-sets .btn-action {
+  margin: 0 10px;
+  width: 100%;
+  border-radius: 30px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.geolocate-btn {
+  position: absolute;
+  z-index: 2;
+  bottom: 3rem;
+  left: 1rem;
+  margin: 0;
+  padding: 0;
+  border-radius: 30px;
+}
+
+.autocomplete {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 500px;
+  z-index: 2;
+}
+
+.search {
+  position: absolute;
+  /* top: 1rem; */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 400px;
+  z-index: 10;
+}
+
+.search input {
+  padding: 0.5rem;
+  width: 100%;
+}
+
+.search .options {
+  height: 40px;
+}
+
+.search ul {
+  padding-inline-start: 0;
+  margin: 2px;
 }
