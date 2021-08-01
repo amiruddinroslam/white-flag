@@ -23,11 +23,11 @@ class WhiteFlagDataService {
     }
 
     getAllOfferHelp() {
-        return offerHelpCollection
+        return offerHelpCollection.get()
     }
 
-    createOfferHelp(help) {
-        return offerHelpCollection.add(help)
+    createOfferHelp(offer) {
+        return offerHelpCollection.add(offer)
     }
 
     updateOfferHelp(id, value) {

@@ -1,15 +1,15 @@
 import React, { useRef, useCallback, useState, useEffect } from 'react'
 import MAPS_SETTINGS from '../../constants/constant'
 import mapStyles from '../../constants/mapStyles'
-import { GoogleMap, useLoadScript, Marker, InfoWindow } from '@react-google-maps/api'
-import { formatRelative } from 'date-fns/esm'
+import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api'
 import Search from './../Search/Search'
 import Geolocate from '../Geolocate/Geolocate'
 import { useSelector, useDispatch } from 'react-redux'
 import geolocationService from './../../services/geolocationService'
 import './GoogleMaps.css'
-import LinearProgress from '@material-ui/core/LinearProgress';
-import { fetchAllHelpRequest } from './../../redux/actions/productActions'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import { fetchAllHelpRequest, fetchAllOfferRequest } from './../../redux/actions/productActions'
+import InfoDialog from '../Common/InfoDialog'
 
 const libraries = ['places']
 const options = {
@@ -25,6 +25,7 @@ export default function GoogleMaps() {
 
     const [selectedPoint, setSelectedPoint] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
+    const [openInfoDialog, setOpenInfoDialog] = useState(false)
 
     const dispatch = useDispatch()
     const requestHelpMarkers = useSelector((state) => state.requestHelp.requestHelp)
@@ -54,13 +55,14 @@ export default function GoogleMaps() {
 
         currentLocation()
         dispatch(fetchAllHelpRequest())
+        dispatch(fetchAllOfferRequest())
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // const formatTime = (unix) => Date(unix)
 
     if (loadError) { return `Error loading maps` }
-    if (!isLoaded) { return `Loading maps`}
+    if (!isLoaded) { return `Loading maps...` }
 
     return (
         <>
@@ -68,9 +70,9 @@ export default function GoogleMaps() {
             <div className="autocomplete">
                 <Search panTo={panTo} />
             </div>
-            <div className="geolocate">
+            {/* <div className="geolocate">
                 <Geolocate panTo={panTo} />
-            </div>
+            </div> */}
             <GoogleMap
                 mapContainerStyle={MAPS_SETTINGS.CONTAINER_STYLE}
                 zoom={MAPS_SETTINGS.DEFAULT_ZOOM}
@@ -82,10 +84,11 @@ export default function GoogleMaps() {
                         key={marker.id} 
                         position={{ lat: marker.latLng.latitude, lng: marker.latLng.longitude }}
                         onClick={() => {
-                            setSelectedPoint(marker)
+                            setSelectedPoint({ ...marker, type: 'Help' })
+                            setOpenInfoDialog(true)
                         }}
                         icon={{
-                            url: `/white_flag.svg`,
+                            url: `/white-flag.png`,
                             origin: new window.google.maps.Point(0, 0),
                             anchor: new window.google.maps.Point(30, 30),
                             scaledSize: new window.google.maps.Size(30, 30),
@@ -97,10 +100,11 @@ export default function GoogleMaps() {
                         key={marker.id} 
                         position={{ lat: marker.latLng.latitude, lng: marker.latLng.longitude }}
                         onClick={() => {
-                            setSelectedPoint(marker)
+                            setSelectedPoint({ ...marker, type: 'Offer' })
+                            setOpenInfoDialog(true)
                         }}
                         icon={{
-                            url: `/care.svg`,
+                            url: `/gift.png`,
                             origin: new window.google.maps.Point(0, 0),
                             anchor: new window.google.maps.Point(30, 30),
                             scaledSize: new window.google.maps.Size(30, 30),
@@ -108,14 +112,12 @@ export default function GoogleMaps() {
                     />
                 ))}
                 {selectedPoint ? (
-                <InfoWindow 
-                    position={{lat: selectedPoint.latLng.latitude, lng: selectedPoint.latLng.latitude}}
-                    onCloseClick={() =>{setSelectedPoint(null)}}>
-                        <div>
-                            <h2>{selectedPoint.description}</h2>
-                            <p>clicked: {formatRelative(selectedPoint.time, new Date())}</p>
-                        </div>
-                </InfoWindow>) : null}
+                    <InfoDialog
+                        open={openInfoDialog}
+                        data={selectedPoint}
+                        closeInfoDialog={() => setOpenInfoDialog(false)}
+                    />
+                ) : null}
             </GoogleMap>
         </>
     )

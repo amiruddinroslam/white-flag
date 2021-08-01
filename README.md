@@ -15,3 +15,5 @@ ReactJS and Firebase powered apps.
 1. Clone the repository
 2. Install dependencies (npm)
 3. Add your Maps and Firebase API keys in .env
+
+_Disclaimer: This app is for showcase only and not intended for a fully functional app. Use at your own risk._

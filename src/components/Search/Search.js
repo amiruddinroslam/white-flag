@@ -1,14 +1,16 @@
 import React from 'react'
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import InputBase from '@material-ui/core/InputBase';
-import IconButton from '@material-ui/core/IconButton';
-import SearchIcon from '@material-ui/icons/Search';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import ClearIcon from '@material-ui/icons/Clear';
+import { makeStyles } from '@material-ui/core/styles'
+import Paper from '@material-ui/core/Paper'
+import InputBase from '@material-ui/core/InputBase'
+import IconButton from '@material-ui/core/IconButton'
+import SearchIcon from '@material-ui/icons/Search'
+import LocationOnIcon from '@material-ui/icons/LocationOn'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import ClearIcon from '@material-ui/icons/Clear'
+import Divider from '@material-ui/core/Divider'
+import Geolocate from '../Geolocate/Geolocate'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,6 +26,10 @@ const useStyles = makeStyles((theme) => ({
   iconButton: {
     padding: 10,
   },
+  divider: {
+    height: 28,
+    margin: 4,
+  },
   grid: {
     padding: '10px 20px',
   },
@@ -34,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Search({ panTo }) {
-  const classes = useStyles();
+  const classes = useStyles()
   const {
     ready,
     value,
@@ -81,7 +87,7 @@ export default function Search({ panTo }) {
       } = suggestion;
 
       return (
-        <div style={{ background: 'white' }}>
+        <Paper style={{ cursor: 'pointer' }}>
           <Grid container className={classes.grid} alignItems="center" onClick={handleSelect(suggestion)}>
             <Grid item>
               <LocationOnIcon className={classes.icon} />
@@ -95,7 +101,7 @@ export default function Search({ panTo }) {
               </Typography>
             </Grid>
           </Grid>
-        </div>
+        </Paper>
       );
     });
 
@@ -116,6 +122,8 @@ export default function Search({ panTo }) {
         <IconButton className={classes.iconButton} aria-label="search">
           {value ? <ClearIcon onClick={() => setValue('')} /> : <SearchIcon />}
         </IconButton>
+        <Divider className={classes.divider} orientation="vertical" />
+        <Geolocate panTo={panTo} />
       </Paper>
       {status === "OK" && <ul>{renderSuggestions()}</ul>}
     </div>

@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import WhiteFlagDataService from './../../services/dataService'
+import { useSelector } from 'react-redux'
+import isEqual from 'lodash/isEqual'
 
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
@@ -14,7 +16,11 @@ import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import MyLocationIcon from '@material-ui/icons/MyLocation'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import Slide from '@material-ui/core/Slide'
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export default function AskHelpForm(props) {
     const [fullName, setFullName] = useState('')
@@ -22,7 +28,9 @@ export default function AskHelpForm(props) {
     const [description, setDescription] = useState('')
     const [latLng, setLatLng] = useState({})
     const [isLocationLoading, setIsLocationsLoading] = useState(false)
-    const [isSuccess, setIsSuccess] = useState('')
+    const [isSuccess, setIsSuccess] = useState(undefined)
+    const [responseMessage, setResponseMessage] = useState('')
+    const requestHelpData = useSelector((state) => state.requestHelp.requestHelp)
 
     const handleSubmit = async (event) => {
         event.preventDefault()
@@ -36,19 +44,22 @@ export default function AskHelpForm(props) {
                 time: new Date()
             })
             console.log(response)
-            setIsSuccess('success')
+            setResponseMessage('Your request is successfully sent!')
+            setIsSuccess(true)
 
         } catch (error) {
             console.log(error)
-            setIsSuccess('error') 
+            setResponseMessage('An error occured')
+            setIsSuccess(false) 
         }
 
-        clearForm();
-        closeAskHelp();
+        clearForm()
+        closeAskHelp()
     }
 
     const closeAskHelp = () => {
         props.closeAskHelp(false)
+        clearForm()
     }
 
     const clearForm = () => {
@@ -62,10 +73,18 @@ export default function AskHelpForm(props) {
         setIsLocationsLoading(true)
         const position = await geolocationService.locateUser()
         if (position) {
-            setLatLng({
-                lat: position?.coords.latitude,
-                lng: position?.coords.longitude
-            })
+            if (validateLocation(position)) {
+                setLatLng({
+                    lat: position?.coords.latitude,
+                    lng: position?.coords.longitude
+                })
+            } else {
+                console.log(`Cannot use a same location twice!`)
+                setResponseMessage('Cannot use a same location twice!')
+                setIsSuccess(false)
+                clearForm()
+                closeAskHelp()
+            }
             setIsLocationsLoading(false)
         }
     }
@@ -76,13 +95,21 @@ export default function AskHelpForm(props) {
         : `${coords.lat}, ${coords.lng}`
     }
 
+    const validateLocation = (latLng) => {
+        requestHelpData.forEach(request => {
+            let location = { lat: request.latLng.latitude, lng: request.latLng.longitude }
+            return isEqual(latLng, location)
+        })
+    }
+
     return (
         <div>
-            {/* {(isSuccess === 'success' ? 
-                <SimpleAlert type={isSuccess} text="Your request is successfully sent!" /> 
-                : <SimpleAlert type={isSuccess} text="An error occured" />)} */}
-                <SimpleAlert type="success" text="Your request is successfully sent!" show={isSuccess !== ''}/> 
-            <Dialog open={props.openInd} onClose={closeAskHelp} aria-labelledby="form-dialog-title">
+            {isSuccess !== undefined && (<SimpleAlert type={isSuccess ? 'success' : 'error'} text={responseMessage} />)}
+            <Dialog 
+                open={props.openInd} 
+                onClose={closeAskHelp} 
+                aria-labelledby="form-dialog-title"
+                TransitionComponent={Transition}>
                 <DialogTitle id="form-dialog-title">Ask for help from others.</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -113,6 +140,8 @@ export default function AskHelpForm(props) {
                         />
                         <TextField
                             required
+                            multiline
+                            maxRows={5}
                             margin="dense"
                             variant="outlined"
                             id="description"
@@ -134,7 +163,7 @@ export default function AskHelpForm(props) {
                                 endAdornment: (
                                     <InputAdornment position="end">
                                         <IconButton 
-                                            aria-label="toggle password visibility"
+                                            aria-label="toggle location"
                                             onClick={currentLocation}
                                         >
                                             {isLocationLoading ? <CircularProgress size="30px" /> : <MyLocationIcon />}

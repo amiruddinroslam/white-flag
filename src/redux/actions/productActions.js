@@ -15,17 +15,19 @@ export const fetchAllHelpRequest = () => async (dispatch) => {
     })
 }
 
-// export const addNewHelpRequest = (help) => async (dispatch) => {
-//     return {
-//         type: ActionTypes.ADD_NEW_HELP_REQUEST,
-//         payload: help
-//     }
-// }
+export const fetchAllOfferRequest = () => async (dispatch) => {
+    const response = await WhiteFlagDataService.getAllOfferHelp()
+    let _data = []
 
-export const offerNewHelp = (offer) => {
-    return {
-        type: ActionTypes.OFFER_NEW_HELP,
-        payload: offer
-    }
+    response.docs.forEach(item => {
+        _data.push({...item.data(), id: item.id})
+    })
+
+    dispatch({
+        type: ActionTypes.FETCH_ALL_OFFER_REQUEST,
+        payload: _data
+    })
 }
+
+
 

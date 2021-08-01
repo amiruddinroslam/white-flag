@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { offerNewHelp } from '../../redux/actions/productActions'
+import React, { useState, useEffect } from 'react'
+import WhiteFlagDataService from './../../services/dataService'
+import { useSelector } from 'react-redux'
+import isEqual from 'lodash/isEqual'
 
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
@@ -10,10 +11,16 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import geolocationService from '../../services/geolocationService'
+import SimpleAlert from '../Common/SimpleAlert'
 import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import MyLocationIcon from '@material-ui/icons/MyLocation'
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Slide from '@material-ui/core/Slide'
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export default function OfferHelpForm(props) {
     const [fullName, setFullName] = useState('')
@@ -21,25 +28,38 @@ export default function OfferHelpForm(props) {
     const [description, setDescription] = useState('')
     const [latLng, setLatLng] = useState({})
     const [isLocationLoading, setIsLocationsLoading] = useState(false)
+    const [isSuccess, setIsSuccess] = useState(undefined)
+    const [responseMessage, setResponseMessage] = useState('')
+    const offerHelpData = useSelector((state) => state.offerHelp.offerHelp)
 
-    const dispatch = useDispatch()
-
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault()
-        dispatch(offerNewHelp({
-            fullName,
-            phoneNo,
-            description,
-            latLng,
-            time: new Date()
-        }))
+        try {
+            // no need to add into the state, directly add to db
+            const response = await WhiteFlagDataService.createOfferHelp({
+                fullName,
+                phoneNo,
+                description,
+                latLng: WhiteFlagDataService.formatGeoPoint(latLng),
+                time: new Date()
+            })
+            console.log(response)
+            setResponseMessage('Your offer is successfully sent!')
+            setIsSuccess(true)
 
-        clearForm();
-        closeOfferHelp();
+        } catch (error) {
+            console.log(error)
+            setResponseMessage('An error occured')
+            setIsSuccess(false) 
+        }
+
+        clearForm()
+        closeOfferHelp()
     }
 
     const closeOfferHelp = () => {
         props.closeOfferHelp(false)
+        clearForm()
     }
 
     const clearForm = () => {
@@ -53,10 +73,18 @@ export default function OfferHelpForm(props) {
         setIsLocationsLoading(true)
         const position = await geolocationService.locateUser()
         if (position) {
-            setLatLng({
-                lat: position?.coords.latitude,
-                lng: position?.coords.longitude
-            })
+            if (!validateLocation(position)) {
+                setLatLng({
+                    lat: position?.coords.latitude,
+                    lng: position?.coords.longitude
+                })
+            } else {
+                console.log(`Cannot use a same location twice!`)
+                setResponseMessage('Cannot use a same location twice!')
+                setIsSuccess(false)
+                clearForm()
+                closeOfferHelp()
+            }
             setIsLocationsLoading(false)
         }
     }
@@ -67,9 +95,21 @@ export default function OfferHelpForm(props) {
         : `${coords.lat}, ${coords.lng}`
     }
 
+    const validateLocation = (latLng) => {
+        offerHelpData.forEach(offer => {
+            let location = { lat: offer.latLng.latitude, lng: offer.latLng.longitude }
+            return isEqual(latLng, location)
+        })
+    }
+
     return (
         <div>
-            <Dialog open={props.openInd} onClose={closeOfferHelp} aria-labelledby="form-dialog-title">
+            {isSuccess !== undefined && (<SimpleAlert type={isSuccess ? 'success' : 'error'} text={responseMessage} />)}
+            <Dialog 
+                open={props.openInd} 
+                onClose={closeOfferHelp} 
+                aria-labelledby="form-dialog-title"
+                TransitionComponent={Transition}>
                 <DialogTitle id="form-dialog-title">Ask for help from others.</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -82,7 +122,7 @@ export default function OfferHelpForm(props) {
                             margin="dense"
                             variant="outlined"
                             id="name"
-                            label="Full Name"
+                            label="Full Name or Name of Organization"
                             fullWidth
                             value={fullName}
                             onChange={e => setFullName(e.target.value)}
@@ -100,10 +140,12 @@ export default function OfferHelpForm(props) {
                         />
                         <TextField
                             required
+                            multiline
+                            maxRows={5}
                             margin="dense"
                             variant="outlined"
                             id="description"
-                            label="Description on what you need"
+                            label="Description on what you offer"
                             fullWidth
                             value={description}
                             onChange={e => setDescription(e.target.value)}
@@ -121,7 +163,7 @@ export default function OfferHelpForm(props) {
                                 endAdornment: (
                                     <InputAdornment position="end">
                                         <IconButton 
-                                            aria-label="toggle password visibility"
+                                            aria-label="toggle location"
                                             onClick={currentLocation}
                                         >
                                             {isLocationLoading ? <CircularProgress size="30px" /> : <MyLocationIcon />}
