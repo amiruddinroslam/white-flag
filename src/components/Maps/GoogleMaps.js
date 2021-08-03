@@ -3,13 +3,13 @@ import MAPS_SETTINGS from '../../constants/constant'
 import mapStyles from '../../constants/mapStyles'
 import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api'
 import Search from './../Search/Search'
-import Geolocate from '../Geolocate/Geolocate'
 import { useSelector, useDispatch } from 'react-redux'
 import geolocationService from './../../services/geolocationService'
 import './GoogleMaps.css'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { fetchAllHelpRequest, fetchAllOfferRequest } from './../../redux/actions/productActions'
 import InfoDialog from '../Common/InfoDialog'
+import Geolocate from './../Geolocate/Geolocate'
 
 const libraries = ['places']
 const options = {
@@ -44,20 +44,22 @@ export default function GoogleMaps() {
 
     useEffect(() => {
         setIsLoading(true)
-        const currentLocation = async () => {
-            const position = await geolocationService.locateUser()
-            panTo({
-                lat: position?.coords.latitude,
-                lng: position?.coords.longitude
-            })
-            setIsLoading(false)
+        if (isLoaded) {
+            const currentLocation = async () => {
+                const position = await geolocationService.locateUser()
+                panTo({
+                    lat: position?.coords.latitude,
+                    lng: position?.coords.longitude
+                })
+                setIsLoading(false)
+            }
+    
+            currentLocation()
+            dispatch(fetchAllHelpRequest())
+            dispatch(fetchAllOfferRequest())
         }
-
-        currentLocation()
-        dispatch(fetchAllHelpRequest())
-        dispatch(fetchAllOfferRequest())
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [isLoaded])
 
     // const formatTime = (unix) => Date(unix)
 
@@ -70,9 +72,9 @@ export default function GoogleMaps() {
             <div className="autocomplete">
                 <Search panTo={panTo} />
             </div>
-            {/* <div className="geolocate">
+            <div className="geolocate">
                 <Geolocate panTo={panTo} />
-            </div> */}
+            </div>
             <GoogleMap
                 mapContainerStyle={MAPS_SETTINGS.CONTAINER_STYLE}
                 zoom={MAPS_SETTINGS.DEFAULT_ZOOM}

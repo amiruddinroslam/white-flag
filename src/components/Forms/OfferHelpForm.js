@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import WhiteFlagDataService from './../../services/dataService'
 import { useSelector } from 'react-redux'
 import isEqual from 'lodash/isEqual'
+import SimpleSnackbar from '../Common/SimpleSnackbar'
+import geolocationService from '../../services/geolocationService'
 
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
@@ -10,8 +12,6 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import geolocationService from '../../services/geolocationService'
-import SimpleAlert from '../Common/SimpleAlert'
 import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import MyLocationIcon from '@material-ui/icons/MyLocation'
@@ -28,8 +28,7 @@ export default function OfferHelpForm(props) {
     const [description, setDescription] = useState('')
     const [latLng, setLatLng] = useState({})
     const [isLocationLoading, setIsLocationsLoading] = useState(false)
-    const [isSuccess, setIsSuccess] = useState(undefined)
-    const [responseMessage, setResponseMessage] = useState('')
+    const [status, setStatus] = useState({})
     const offerHelpData = useSelector((state) => state.offerHelp.offerHelp)
 
     const handleSubmit = async (event) => {
@@ -44,13 +43,19 @@ export default function OfferHelpForm(props) {
                 time: new Date()
             })
             console.log(response)
-            setResponseMessage('Your offer is successfully sent!')
-            setIsSuccess(true)
+            setStatus({
+                type: 'success',
+                msg: 'Your request is successfully sent!',
+                date: new Date()
+            })
 
         } catch (error) {
             console.log(error)
-            setResponseMessage('An error occured')
-            setIsSuccess(false) 
+            setStatus({
+                type: 'error',
+                msg: 'An error occured',
+                date: new Date()
+            })
         }
 
         clearForm()
@@ -80,8 +85,11 @@ export default function OfferHelpForm(props) {
                 })
             } else {
                 console.log(`Cannot use a same location twice!`)
-                setResponseMessage('Cannot use a same location twice!')
-                setIsSuccess(false)
+                setStatus({
+                    type: 'error',
+                    msg: 'Cannot use a same location twice!',
+                    date: new Date()
+                })
                 clearForm()
                 closeOfferHelp()
             }
@@ -104,7 +112,7 @@ export default function OfferHelpForm(props) {
 
     return (
         <div>
-            {isSuccess !== undefined && (<SimpleAlert type={isSuccess ? 'success' : 'error'} text={responseMessage} />)}
+            {Object.keys(status).length > 0 ? <SimpleSnackbar id={status.date} type={status.type} text={status.msg} /> : null }
             <Dialog 
                 open={props.openInd} 
                 onClose={closeOfferHelp} 

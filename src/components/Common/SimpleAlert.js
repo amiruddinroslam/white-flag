@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Alert from '@material-ui/lab/Alert'
 import IconButton from '@material-ui/core/IconButton'
@@ -21,9 +21,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SimpleAlert({ type, text }) {
+export default function SimpleAlert({ id, type, text }) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true)
+  useEffect(() => {
+    setOpen(true)
+  }, [id])
+
+  const handleClick = () => {
+    setOpen(false)
+  }
+
+  console.log('simpleAlert', open)
 
     return (
       <div className={classes.root}>
@@ -35,9 +44,7 @@ export default function SimpleAlert({ type, text }) {
                 aria-label="close"
                 color="inherit"
                 size="small"
-                onClick={() => {
-                  setOpen(false);
-                }}
+                onClick={handleClick}
               >
                 <CloseIcon fontSize="inherit" />
               </IconButton>
@@ -46,7 +53,6 @@ export default function SimpleAlert({ type, text }) {
             {text}
           </Alert>
         </Collapse>
-        {/* <Alert severity={type}>{text}</Alert> */}
       </div>
     )
 }

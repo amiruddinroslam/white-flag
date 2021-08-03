@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { formatRelative } from 'date-fns/esm'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
@@ -8,14 +8,12 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Slide from '@material-ui/core/Slide'
 import Chip from '@material-ui/core/Chip'
-import Avatar from '@material-ui/core/Avatar'
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
 import CallIcon from '@material-ui/icons/Call'
 import WhatsAppIcon from '@material-ui/icons/WhatsApp'
 import DirectionsIcon from '@material-ui/icons/Directions'
 import ClearIcon from '@material-ui/icons/Clear'
-import IconButton from '@material-ui/core/IconButton'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
