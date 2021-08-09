@@ -20,7 +20,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function InfoDialog({ open, data, closeInfoDialog }) {
-    console.log(data)
 
     const title = ({ type, fullName }) => {
         switch (type) {

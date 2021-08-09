@@ -32,8 +32,6 @@ export default function SimpleAlert({ id, type, text }) {
     setOpen(false)
   }
 
-  console.log('simpleAlert', open)
-
     return (
       <div className={classes.root}>
         <Collapse in={open}>

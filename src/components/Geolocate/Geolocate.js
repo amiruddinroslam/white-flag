@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import MyLocationIcon from '@material-ui/icons/MyLocation';
-import geolocationService from '../../services/geolocationService'
+import GeolocationService from '../../services/GeolocationService'
 import { makeStyles } from '@material-ui/core/styles'
 import IconButton from '@material-ui/core/IconButton'
-import LinearProgress from '@material-ui/core/LinearProgress'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import './Geolocate.css'
 
 const useStyles = makeStyles((theme) => ({
@@ -18,7 +18,7 @@ export default function Geolocate({ panTo }) {
 
     const currentLocation = async () => {
         setIsLoadingGeolocate(true)
-        const position = await geolocationService.locateUser()
+        const position = await GeolocationService.locateUser()
         panTo({
             lat: position?.coords.latitude,
             lng: position?.coords.longitude
@@ -31,10 +31,9 @@ export default function Geolocate({ panTo }) {
             {/* <Button className="geolocate-btn" variant="contained" color="default" onClick={currentLocation}>
                 <MyLocationIcon />
             </Button> */}
-            {isLoadingGeolocate ? <LinearProgress /> : null}
-            <IconButton color="primary" className={classes.iconButton} aria-label="directions" onClick={currentLocation}>
+            {isLoadingGeolocate ? <CircularProgress size="30px" /> : <IconButton color="primary" disabled={isLoadingGeolocate} className={classes.iconButton} aria-label="directions" onClick={currentLocation}>
                 <MyLocationIcon />
-            </IconButton>
+            </IconButton>}
         </>
     )
 }
