@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '2px 4px',
     display: 'flex',
     alignItems: 'center',
-    width: 400,
+    position: 'sticky'
   },
   input: {
     marginLeft: theme.spacing(1),
@@ -106,26 +106,26 @@ export default function Search({ panTo }) {
     });
 
   return (
-    <div className="search">
-      <Paper component="form" className={classes.root}>
-        <InputBase
-          variant="outlined"
-          style={{ width: 400 }}
-          label="Search a location"
-          value={value}
-          onChange={handleInput}
-          disabled={!ready}
-          className={classes.input}
-          placeholder="Search a location"
-          inputProps={{ 'aria-label': 'search google maps' }}
-        />
-        <IconButton className={classes.iconButton} aria-label="search">
-          {value ? <ClearIcon onClick={() => setValue('')} /> : <SearchIcon />}
-        </IconButton>
-        <Divider className={classes.divider} orientation="vertical" />
-        <Geolocate panTo={panTo} />
-      </Paper>
-      {status === "OK" && <ul>{renderSuggestions()}</ul>}
+      <div className="search" >
+        <Paper component="form" className={classes.root}>
+          <InputBase
+            variant="outlined"
+            style={{ width: 400 }}
+            label="Search a location"
+            value={value}
+            onChange={handleInput}
+            disabled={!ready}
+            className={classes.input}
+            placeholder="Search a location"
+            inputProps={{ 'aria-label': 'search google maps' }}
+          />
+          <IconButton className={classes.iconButton} aria-label="search">
+            {value ? <ClearIcon onClick={() => setValue('')} /> : <SearchIcon />}
+          </IconButton>
+          <Divider className={classes.divider} orientation="vertical" />
+          <Geolocate panTo={panTo} />
+        </Paper>
+        {status === "OK" && <ul>{renderSuggestions()}</ul>}
     </div>
   )
 }

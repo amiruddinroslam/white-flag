@@ -4,8 +4,9 @@ const MAP_SETTINGS = {
         lng: 101.748344
     },
     CONTAINER_STYLE: {
-        width: '100vw',
-        height: '100vh'
+        'width': '100%',
+        'minHeight': '-webkit-fill-available',
+        'height': '100vh',
     },
     DEFAULT_ZOOM: 12,
     MARKER_SIZE: 35,

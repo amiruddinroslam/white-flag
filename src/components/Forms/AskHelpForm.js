@@ -5,6 +5,8 @@ import isEqual from 'lodash/isEqual'
 import SimpleSnackbar from '../Common/SimpleSnackbar'
 import GeolocationService from '../../services/GeolocationService'
 import ConfirmationDialog from './../Common/ConfirmationDialog'
+import CommonBackdrop from '../Common/CommonBackdrop'
+import RequestCodeDialog from '../Common/RequestCodeDialog'
 import { fetchAllHelpRequest } from './../../redux/actions/productActions'
 
 import Button from '@material-ui/core/Button'
@@ -33,8 +35,11 @@ export default function AskHelpForm(props) {
     const [isLocationLoading, setIsLocationsLoading] = useState(false)
     const [status, setStatus] = useState({})
     const [confirmSubmit, setConfirmSubmit] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [requestCode, setRequestCode] = useState('')
     //confirmation dialog
     const [openConfirmationDilalog, setOpenConfirmationDialog] = useState(false)
+    const [openRequestCodeDialog, setOpenRequestCodeDialog] = useState(false)
 
     const dispatch = useDispatch()
     const requestHelpData = useSelector((state) => state.requestHelp.requestHelp)
@@ -46,6 +51,7 @@ export default function AskHelpForm(props) {
     }
 
     const addRequestHelp = async () => {
+        setIsLoading(true)
         try {
             // no need to add into the state, directly add to db
             const response = await WhiteFlagDataService.createRequestHelp({
@@ -64,6 +70,9 @@ export default function AskHelpForm(props) {
             })
 
             dispatch(fetchAllHelpRequest())
+            setIsLoading(false)
+            setRequestCode(response.id)
+            setOpenRequestCodeDialog(true)
 
         } catch (error) {
             console.log(error)
@@ -72,6 +81,8 @@ export default function AskHelpForm(props) {
                 msg: 'An error occured',
                 date: new Date()
             })
+
+            setIsLoading(false)
         }
 
         clearForm()
@@ -141,6 +152,8 @@ export default function AskHelpForm(props) {
         closeAskHelp()
     }
 
+    const handleRequestCodeDialog = () => setOpenRequestCodeDialog(false)
+
     useEffect(() => {
         if (confirmSubmit === true) {
             console.log('sending data to firebase')
@@ -152,7 +165,7 @@ export default function AskHelpForm(props) {
 
     return (
         <div>
-            {/* {Object.keys(status).length > 0 ? <SimpleAlert id={status.date} type={status.type} text={status.msg} /> : null } */}
+            {isLoading ? <CommonBackdrop isOpen={isLoading} /> : null}
             {Object.keys(status).length > 0 ? <SimpleSnackbar id={status.date} type={status.type} text={status.msg} /> : null }
             {openConfirmationDilalog ? <ConfirmationDialog
                 isOpen={openConfirmationDilalog}
@@ -165,6 +178,12 @@ export default function AskHelpForm(props) {
                     address: address,
                 }}
             />: null}
+            {openRequestCodeDialog ? <RequestCodeDialog
+                    open={openRequestCodeDialog}
+                    handleClose={handleRequestCodeDialog}
+                    type={'Offer'}
+                    code={requestCode}
+                /> : null}
             <Dialog 
                 open={props.openInd} 
                 onClose={closeAskHelp} 

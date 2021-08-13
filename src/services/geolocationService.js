@@ -2,7 +2,7 @@ class GeolocationService {
 
     locateUser() {
         return new Promise((resolve, reject) => 
-            navigator.geolocation.getCurrentPosition(resolve, reject)
+            navigator.geolocation.getCurrentPosition(resolve, reject, { enableHighAccuracy: true, maximumAge: 10000 })
         )
     }
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { formatRelative } from 'date-fns/esm'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
@@ -14,12 +14,20 @@ import CallIcon from '@material-ui/icons/Call'
 import WhatsAppIcon from '@material-ui/icons/WhatsApp'
 import DirectionsIcon from '@material-ui/icons/Directions'
 import ClearIcon from '@material-ui/icons/Clear'
+import IconButton from '@material-ui/core/IconButton'
+import DeleteIcon from '@material-ui/icons/Delete'
+import EditIcon from '@material-ui/icons/Edit';
+import Box from '@material-ui/core/Box'
+import SubmitCodeDialog from './SubmitCodeDialog'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+    return <Slide direction="up" ref={ref} {...props} />;
+})
 
 export default function InfoDialog({ open, data, closeInfoDialog }) {
+
+    const [action, setAction] = useState('')
+	const [openAction, setOpenAction] = useState(false)
 
     const title = ({ type, fullName }) => {
         switch (type) {
@@ -27,14 +35,18 @@ export default function InfoDialog({ open, data, closeInfoDialog }) {
                 return (
                     <div className="help-title">
                         {fullName} need help 🏳️
-                        <ClearIcon style={{ float: 'right', cursor: 'pointer' }} onClick={() => closeInfoDialog(false)} />
+                        <IconButton color="primary" component="span" style={{ float: 'right', padding: 0 }} onClick={() => closeInfoDialog(false)}>
+                            <ClearIcon />
+                        </IconButton>
                     </div>
                 )
             case 'Offer':
                 return (
                     <div className="offer-title">
                         {fullName} want to help 👐
-                        <ClearIcon style={{ float: 'right', cursor: 'pointer' }} onClick={() => closeInfoDialog(false)} />
+                        <IconButton color="primary" component="span" style={{ float: 'right', padding: 0 }} onClick={() => closeInfoDialog(false)}>
+                            <ClearIcon />
+                        </IconButton>
                     </div>
                 )
             default:
@@ -60,27 +72,94 @@ export default function InfoDialog({ open, data, closeInfoDialog }) {
         window.open(`https://www.google.com/maps/search/?api=1&query=${data.latLng.latitude},${data.latLng.longitude}`)
     }
 
-    const closeInfo = () => closeInfoDialog(false)
+    const handleEditAction = () => {
+        setAction('edit')
+		setOpenAction(true)
+    }
+
+	const handleDeleteAction = () => {
+        setAction('delete')
+		setOpenAction(true)
+    }
+
+	const handleCloseAction = () => {
+		setOpenAction(false)
+	}
 
     return (
-        <div>
-            <Dialog
-                maxWidth="sm"
-                fullWidth
-                open={open}
-                TransitionComponent={Transition}
-                keepMounted
-                onClose={closeInfo}
-                aria-labelledby="alert-dialog-slide-title"
-                aria-describedby="alert-dialog-slide-description"
-            >
-                <DialogTitle id="alert-dialog-slide-title">
-                    {title(data)}
-                </DialogTitle>
-                <DialogContent>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <DialogContentText id="alert-dialog-slide-description" style={{ fontStyle: 'italic' }}>{data.description}</DialogContentText>
+		<div>
+			{openAction ? <SubmitCodeDialog open={openAction} handleClose={handleCloseAction} action={action} type={data.type} /> : null}
+			<Dialog
+				maxWidth="sm"
+				fullWidth
+				open={open}
+				TransitionComponent={Transition}
+				keepMounted
+				onClose={closeInfoDialog}
+				aria-labelledby="alert-dialog-slide-title"
+				aria-describedby="alert-dialog-slide-description"
+			>
+				<DialogTitle id="alert-dialog-slide-title">{title(data)}</DialogTitle>
+				<DialogContent>
+					<Grid container spacing={2}>
+						<Grid item xs={12}>
+							<DialogContentText
+								id="alert-dialog-slide-description"
+								style={{ fontStyle: "italic" }}
+							>
+								{data.description}
+							</DialogContentText>
+						</Grid>
+					</Grid>
+					<Box display="flex" flexDirection="row" flexWrap="wrap">
+						<Box m={1} style={{ marginLeft: 0 }}>
+							<Chip
+								size="small"
+								icon={<EditIcon />}
+								label="Edit"
+								clickable
+								onClick={handleEditAction}
+								color="primary"
+								variant="outlined"
+							/>
+						</Box>
+						<Box m={1} style={{ marginLeft: 0 }}>
+							<Chip
+								size="small"
+								icon={<DeleteIcon />}
+								label="Delete"
+								clickable
+								onClick={handleDeleteAction}
+								color="secondary"
+								variant="outlined"
+							/>
+						</Box>
+						<Box m={1} style={{ marginLeft: "auto" }}>
+							<Typography variant="overline" style={{ float: "right" }}>
+								{formatRelative(
+									new Date(data.time.seconds * 1000),
+									new Date()
+								)}
+							</Typography>
+						</Box>
+					</Box>
+					{/* <Grid item xs={3}>
+                            <Chip
+                                icon={<DirectionsIcon />}
+                                label="Whatsapp"
+                                clickable
+                                onClick={handleDirection}
+                                color="primary"
+                            />
+                        </Grid>
+                        <Grid item xs={3}>
+                            <Chip
+                                icon={<DirectionsIcon />}
+                                label="Call"
+                                clickable
+                                onClick={handleDirection}
+                                color="primary"
+                            />
                         </Grid>
                         <Grid item xs={6}>
                             <Chip
@@ -90,24 +169,51 @@ export default function InfoDialog({ open, data, closeInfoDialog }) {
                                 onClick={handleDirection}
                                 color="primary"
                             />
-                        </Grid>
-                        <Grid item xs={6}>
+                        </Grid> */}
+					{/* <Grid item xs={6}>
                             <Typography variant="overline" style={{ float: 'right' }}>{formatRelative(new Date(data.time.seconds * 1000), new Date())}</Typography>
-                        </Grid>
-                        {/* <Grid item xs={5}>
+                        </Grid> */}
+					{/* <Grid item xs={5}>
                             <Chip avatar={<Avatar>ID</Avatar>} label={data.id} />
                         </Grid> */}
-                    </Grid>
-                </DialogContent>
-                <DialogActions>
-                <Button onClick={handleCallPhone} color="primary" fullWidth variant="outlined" startIcon={<CallIcon />}>
-                    Call
-                </Button>
-                <Button onClick={handleWhatsapp} color="secondary" fullWidth variant="outlined" startIcon={<WhatsAppIcon />}>
-                    Whatsapp
-                </Button>
-                </DialogActions>
-            </Dialog>
-        </div>
-    )
+					{/* </Grid> */}
+				</DialogContent>
+				<DialogActions>
+					<Button
+						style={{ fontSize: 12 }}
+						onClick={handleCallPhone}
+						color="secondary"
+						fullWidth
+						variant="contained"
+						startIcon={<CallIcon />}
+						disableElevation
+					>
+						Call
+					</Button>
+					<Button
+						style={{ backgroundColor: "#25D366", color: "white", fontSize: 12 }}
+						onClick={handleWhatsapp}
+						color="secondary"
+						fullWidth
+						variant="contained"
+						startIcon={<WhatsAppIcon />}
+						disableElevation
+					>
+						Whatsapp
+					</Button>
+					<Button
+						style={{ fontSize: 12 }}
+						onClick={handleDirection}
+						color="primary"
+						fullWidth
+						variant="contained"
+						startIcon={<DirectionsIcon />}
+						disableElevation
+					>
+						Maps
+					</Button>
+				</DialogActions>
+			</Dialog>
+      </div>
+    );
 }

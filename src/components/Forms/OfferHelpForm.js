@@ -5,6 +5,8 @@ import isEqual from 'lodash/isEqual'
 import SimpleSnackbar from '../Common/SimpleSnackbar'
 import GeolocationService from '../../services/GeolocationService'
 import ConfirmationDialog from './../Common/ConfirmationDialog'
+import CommonBackdrop from '../Common/CommonBackdrop'
+import RequestCodeDialog from '../Common/RequestCodeDialog'
 import { fetchAllOfferRequest } from './../../redux/actions/productActions'
 
 import Button from '@material-ui/core/Button'
@@ -33,8 +35,11 @@ export default function OfferHelpForm(props) {
     const [isLocationLoading, setIsLocationsLoading] = useState(false)
     const [status, setStatus] = useState({})
     const [confirmSubmit, setConfirmSubmit] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [requestCode, setRequestCode] = useState('')
     //confirmation dialog
     const [openConfirmationDilalog, setOpenConfirmationDialog] = useState(false)
+    const [openRequestCodeDialog, setOpenRequestCodeDialog] = useState(false)
 
     const dispatch = useDispatch()
     const offerHelpData = useSelector((state) => state.offerHelp.offerHelp)
@@ -46,6 +51,7 @@ export default function OfferHelpForm(props) {
     }
 
     const addOfferRequest = async () => {
+        setIsLoading(true)
         try {
             // no need to add into the state, directly add to db
             const response = await WhiteFlagDataService.createOfferHelp({
@@ -56,7 +62,7 @@ export default function OfferHelpForm(props) {
                 address: address,
                 time: new Date()
             })
-            console.log(response.id)
+
             setStatus({
                 type: 'success',
                 msg: 'Your request is successfully sent!',
@@ -64,6 +70,9 @@ export default function OfferHelpForm(props) {
             })
 
             dispatch(fetchAllOfferRequest())
+            setIsLoading(false)
+            setRequestCode(response.id)
+            setOpenRequestCodeDialog(true)
 
         } catch (error) {
             console.log(error)
@@ -72,6 +81,8 @@ export default function OfferHelpForm(props) {
                 msg: 'An error occured',
                 date: new Date()
             })
+
+            setIsLoading(true)
         }
 
         clearForm()
@@ -140,6 +151,8 @@ export default function OfferHelpForm(props) {
         closeOfferHelp()
     }
 
+    const handleRequestCodeDialog = () => setOpenRequestCodeDialog(false)
+
     useEffect(() => {
         if (confirmSubmit === true) {
             console.log('sending data to firebase')
@@ -151,18 +164,25 @@ export default function OfferHelpForm(props) {
 
     return (
         <div>
+            {isLoading ? <CommonBackdrop isOpen={isLoading} /> : null}
             {Object.keys(status).length > 0 ? <SimpleSnackbar id={status.date} type={status.type} text={status.msg} /> : null}
             {openConfirmationDilalog ? <ConfirmationDialog
-                isOpen={openConfirmationDilalog}
-                handleClose={handleConfirmationDialog}
-                title="Confirm to submit your information?"
-                data={{
-                    fullName: fullName,
-                    phoneNo: phoneNo,
-                    description: description,
-                    address: address,
-                }}
-            />: null}
+                    isOpen={openConfirmationDilalog}
+                    handleClose={handleConfirmationDialog}
+                    title="Confirm to submit your information?"
+                    data={{
+                        fullName: fullName,
+                        phoneNo: phoneNo,
+                        description: description,
+                        address: address,
+                    }}
+                />: null}
+            {openRequestCodeDialog ? <RequestCodeDialog
+                    open={openRequestCodeDialog}
+                    handleClose={handleRequestCodeDialog}
+                    type={'Offer'}
+                    code={requestCode}
+                /> : null}
             <Dialog 
                 open={props.openInd} 
                 onClose={closeOfferHelp} 

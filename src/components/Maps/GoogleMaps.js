@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import GeolocationService from '../../services/GeolocationService'
 import './GoogleMaps.css'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import Box from '@material-ui/core/Box'
 import { fetchAllHelpRequest, fetchAllOfferRequest } from './../../redux/actions/productActions'
 import InfoDialog from '../Common/InfoDialog'
 import SimpleAlert from '../Common/SimpleAlert'
@@ -14,7 +15,8 @@ import SimpleAlert from '../Common/SimpleAlert'
 const libraries = ['places', 'geometry']
 const options = {
     styles: mapStyles,
-    disableDefaultUI: true
+    disableDefaultUI: true,
+    gestureHandling: 'greedy'
 }
 
 export default function GoogleMaps() {
@@ -43,6 +45,8 @@ export default function GoogleMaps() {
         mapRef.current.panTo({ lat, lng })
         mapRef.current.setZoom(14)
     }, [])
+
+    const handleCloseInfoDialog = () => setOpenInfoDialog(false)
 
     useEffect(() => {
         setIsLoading(true)
@@ -94,10 +98,15 @@ export default function GoogleMaps() {
     return (
         <>
             {isLoading && <LinearProgress />}
-            {nearbyHelpRequest ? <SimpleAlert id={new Date()} type="info" text={`There are ${nearbyHelpRequest} white flags have been raised within 10km of your current location. Select any white flag icon to help.`} /> : null }
-            <div className="autocomplete">
-                <Search panTo={panTo} />
-            </div>
+            <Box display="flex" justifyContent="center" className="simple-alert">
+                {nearbyHelpRequest ? <SimpleAlert id={new Date()} type="info" text={`There are ${nearbyHelpRequest} white flags have been raised within 10km of your current location. Select any white flag icon to help.`} /> : null }
+            </Box>
+            {/* <Grid container>
+            <Grid item xs={12}>
+                {nearbyHelpRequest ? <SimpleAlert id={new Date()} type="info" text={`There are ${nearbyHelpRequest} white flags have been raised within 10km of your current location. Select any white flag icon to help.`} /> : null }
+            </Grid>
+            </Grid> */}
+            <Search panTo={panTo} />
             <GoogleMap
                 mapContainerStyle={MAPS_SETTINGS.CONTAINER_STYLE}
                 zoom={MAPS_SETTINGS.DEFAULT_ZOOM}
@@ -155,7 +164,7 @@ export default function GoogleMaps() {
                     <InfoDialog
                         open={openInfoDialog}
                         data={selectedPoint}
-                        closeInfoDialog={() => setOpenInfoDialog(false)}
+                        closeInfoDialog={handleCloseInfoDialog}
                     />
                 ) : null}
             </GoogleMap>

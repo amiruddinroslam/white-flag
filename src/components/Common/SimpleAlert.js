@@ -7,17 +7,9 @@ import CloseIcon from '@material-ui/icons/Close'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '50%',
     '& > * + *': {
       marginTop: theme.spacing(2),
     },
-    position: 'absolute',
-    zIndex: 2,
-    bottom: '8rem',
-    right: '22rem',
-    margin: 0,
-    padding: 0,
-    borderRadius: 30
   },
 }));
 
