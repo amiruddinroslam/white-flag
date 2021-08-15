@@ -7,8 +7,12 @@ class GeolocationService {
     }
 
     async getAddressFromLatLng({ lat, lng }) {
-        return fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
-                .then(response => response.json())
+        // return fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`)
+        //         .then(response => response.json())
+
+        const geocoder = new window.google.maps.Geocoder()
+        return geocoder.geocoder({ location: { lat, lng }})
+
     }
 
     checkHelpRequestAroundUser(userMarker, allMarkers) {

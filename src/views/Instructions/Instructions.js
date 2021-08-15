@@ -10,6 +10,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 const useStyles = makeStyles((theme) => ({
 	root: {
 	    height: '100vh',
+        overflowY: 'scroll'
 	},
     accordion: {
         width: '100%',
@@ -48,7 +49,7 @@ export default function Contact() {
                             <AccordionDetails>
                                 <ol>
                                     <li>Click 'I Need Help' button in Home tab</li>
-                                    <li>Enter you details. Make sure is is correct to avoid any problems later</li>
+                                    <li>Enter you details. Make sure it is correct to avoid any problems later</li>
                                     <li>On Exact Location field, click on the locate icon to get your exact location and nearby address</li>
                                     <li>Check your details entered are correct, and click Submit</li>
                                     <li>Check your details before click Confirm</li>
