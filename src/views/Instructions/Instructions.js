@@ -52,6 +52,7 @@ export default function Contact() {
                                     <li>On Exact Location field, click on the locate icon to get your exact location and nearby address</li>
                                     <li>Check your details entered are correct, and click Submit</li>
                                     <li>Check your details before click Confirm</li>
+                                    <li>Please save your unique code prompted after the request successfully added</li>
                                     <li>You can view your Help Request in the map</li>
                                 </ol>
                             </AccordionDetails>
@@ -71,6 +72,7 @@ export default function Contact() {
                                     <li>On Exact Location field, click on the locate icon to get your exact location and nearby address</li>
                                     <li>Check your details entered are correct, and click Submit</li>
                                     <li>Check your details before click Confirm</li>
+                                    <li>Please save your unique code prompted after the offer successfully added</li>
                                     <li>You can view your Offer in the map</li>
                                 </ol>
                             </AccordionDetails>
@@ -93,82 +95,24 @@ export default function Contact() {
                                 </ol>
                             </AccordionDetails>
                         </Accordion>
-                        <Accordion disabled>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel3a-content"
-                                id="panel3a-header"
-                            >
-                                <Typography className={classes.heading}>Disabled Accordion</Typography>
-                            </AccordionSummary>
-                        </Accordion>
-                        {/* <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1bh-content"
-                                id="panel1bh-header"
-                            >
-                                <Typography className={classes.heading}>General settings</Typography>
-                                <Typography className={classes.secondaryHeading}>I am an accordion</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Typography>
-                                    Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat. Aliquam eget
-                                    maximus est, id dignissim quam.
-                                </Typography>
-                            </AccordionDetails>
-                        </Accordion>
-                        <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel2bh-content"
-                                id="panel2bh-header"
-                            >
-                                <Typography className={classes.heading}>Users</Typography>
-                                <Typography className={classes.secondaryHeading}>
-                                    You are currently not an owner
-                                </Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Typography>
-                                    Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus, varius pulvinar
-                                    diam eros in elit. Pellentesque convallis laoreet laoreet.
-                                </Typography>
-                            </AccordionDetails>
-                        </Accordion>
-                        <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel3bh-content"
-                                id="panel3bh-header"
-                            >
-                                <Typography className={classes.heading}>Advanced settings</Typography>
-                                <Typography className={classes.secondaryHeading}>
-                                    Filtering has been entirely disabled for whole web server
-                                </Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Typography>
-                                    Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros,
-                                    vitae egestas augue. Duis vel est augue.
-                                </Typography>
-                            </AccordionDetails>
-                        </Accordion>
                         <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
                             <AccordionSummary
                                 expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel4bh-content"
-                                id="panel4bh-header"
+                                aria-controls="panel4a-content"
+                                id="panel4a-header"
                             >
-                                <Typography className={classes.heading}>Personal data</Typography>
+                                <Typography className={classes.heading}>Delete a listing</Typography>
                             </AccordionSummary>
                             <AccordionDetails>
-                                <Typography>
-                                    Nunc vitae orci ultricies, auctor nunc in, volutpat nisl. Integer sit amet egestas eros,
-                                    vitae egestas augue. Duis vel est augue.
-                                </Typography>
+                                <ol>
+                                    <li>Click on your listing</li>
+                                    <li>Click delete</li>
+                                    <li>Enter your unique code</li>
+                                    <li>Click confirm after done reviewing</li>
+                                    <li>Your listing is removed from the map</li>
+                                </ol>
                             </AccordionDetails>
-                        </Accordion> */}
+                        </Accordion>
                     </div>
                 </Container>
             </div>
