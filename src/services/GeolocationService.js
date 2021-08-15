@@ -11,7 +11,7 @@ class GeolocationService {
         //         .then(response => response.json())
 
         const geocoder = new window.google.maps.Geocoder()
-        return geocoder.geocoder({ location: { lat, lng }})
+        return geocoder.geocode({ location: { lat, lng }})
 
     }
 
