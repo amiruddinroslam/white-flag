@@ -173,7 +173,6 @@ export default function AskHelpForm({ openInd, closeAskHelp, isEdit, editData })
                 const geocodeAddress = await getAddressfromLatLng(position)
                 setAddress(geocodeAddress.results[0].formatted_address)
             } else {
-                console.log(`Cannot use a same location twice!`)
                 setStatus({
                     type: 'error',
                     msg: 'Cannot use a same location twice!',
@@ -217,7 +216,6 @@ export default function AskHelpForm({ openInd, closeAskHelp, isEdit, editData })
     const handleRequestCodeDialog = () => setOpenRequestCodeDialog(false)
 
     useEffect(() => {
-        console.log(confirmSubmit)
         if (confirmSubmit === true) {
             if (isEdit) {
                 updateRequestHelp()
@@ -230,11 +228,9 @@ export default function AskHelpForm({ openInd, closeAskHelp, isEdit, editData })
     }, [confirmSubmit])
 
     useEffect(() => {
-        console.log(`isEdit`, isEdit)
         if (isEditData) {
 
             if (Object.keys(editData).length > 0) {
-                console.log(editData)
                 setRequestId(editData.id)
                 setFullName(editData.fullName)
                 setPhoneNo(editData.phoneNo)

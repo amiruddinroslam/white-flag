@@ -56,7 +56,11 @@ export default function SubmitCodeDialog({ open, handleClose, action, type }) {
                 setIsDelete(true)
             }
         } else {
-            console.log('No posting with the entered key was found')
+            setStatus({
+                date: new Date(),
+                type: 'error',
+                msg: 'No posting with the unique key was found!'
+            })
         }
     }
 

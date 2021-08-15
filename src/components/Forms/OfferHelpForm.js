@@ -110,7 +110,6 @@ export default function OfferHelpForm({ openInd, closeOfferHelp }) {
                 const geocodeAddress = await getAddressfromLatLng(position)
                 setAddress(geocodeAddress.results[0].formatted_address)
             } else {
-                console.log(`Cannot use a same location twice!`)
                 setStatus({
                     type: 'error',
                     msg: 'Cannot use a same location twice!',
@@ -155,7 +154,6 @@ export default function OfferHelpForm({ openInd, closeOfferHelp }) {
 
     useEffect(() => {
         if (confirmSubmit === true) {
-            console.log('sending data to firebase')
             addOfferRequest()
         }
 
