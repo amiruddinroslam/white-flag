@@ -29,5 +29,18 @@ export const fetchAllOfferRequest = () => async (dispatch) => {
     })
 }
 
+export const setHepRequestById = (helpRequest) => {
+    return {
+        type: ActionTypes.SET_HELP_REQUEST_BY_ID,
+        payload: helpRequest
+    }
+}
+
+export const removeEditHelpRequest = () => {
+    return {
+        type: ActionTypes.REMOVE_EDIT_HELP_REQUEST
+    }
+}
+
 
 

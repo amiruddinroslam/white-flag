@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
 	    height: '100vh',
 	},
     image: {
-        paddingTop: 60
+        paddingTop: 30
     }
 }))
 
@@ -42,6 +42,11 @@ export default function About() {
                 <Box display="flex" justifyContent="center">
                 <Typography variant="overline" gutterBottom align="center">
                     Made with ❤️ in Malaysia
+                </Typography>
+                </Box>
+                <Box display="flex" justifyContent="center">
+                <Typography variant="caption" gutterBottom align="center">
+                    <a href="https://twitter.com/amiruddinroslam/" target="_blank" rel="noreferrer">@amiruddinroslam</a>
                 </Typography>
                 </Box>
             </Container>

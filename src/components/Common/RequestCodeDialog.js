@@ -10,8 +10,9 @@ import { makeStyles } from '@material-ui/core/styles'
 const useStyles = makeStyles((theme) => ({
     root: {
         backgroundColor: 'lightgrey',
-        padding: 5,
-        textAlign: 'center'
+        padding: '2rem 0',
+        textAlign: 'center',
+        overflowWrap: 'break-word'
     },
 }))
 
@@ -34,9 +35,10 @@ export default function RequestCodeDialog({ open, handleClose, type, code }) {
             >
                 <DialogTitle id="alert-dialog-title">Your {type} request code</DialogTitle>
                 <DialogContent>
-                <DialogContentText id="alert-dialog-description">
+                <DialogContentText id="alert-dialog-description" component={'span'}>
                     <div className={classes.root}>
-                        <h1>{code}</h1>
+                        <span style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{code}</span>
+                        {/* <h1>{code}</h1> */}
                     </div>
                 </DialogContentText>
                 <DialogContentText id="alert-dialog-description">

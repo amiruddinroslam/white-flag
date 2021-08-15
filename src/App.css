@@ -93,3 +93,14 @@ h2.white-flag-logo {
   padding-inline-start: 0;
   margin: 2px;
 }
+
+.instructions {
+  overflow-y: scroll;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+}
+
+.instructions::-webkit-scrollbar { /* WebKit */
+  width: 0;
+  height: 0;
+}

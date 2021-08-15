@@ -26,7 +26,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 })
 
-export default function OfferHelpForm(props) {
+export default function OfferHelpForm({ openInd, closeOfferHelp }) {
     const [fullName, setFullName] = useState('')
     const [phoneNo, setPhoneNo] = useState('')
     const [description, setDescription] = useState('')
@@ -46,7 +46,7 @@ export default function OfferHelpForm(props) {
 
     const handleSubmit =  (event) => {
         event.preventDefault()
-        closeOfferHelp()
+        // closeOfferHelpEvent()
         setOpenConfirmationDialog(true)
     }
 
@@ -86,11 +86,11 @@ export default function OfferHelpForm(props) {
         }
 
         clearForm()
-        closeOfferHelp()
+        closeOfferHelpEvent()
     }
 
-    const closeOfferHelp = () => {
-        props.closeOfferHelp(false)
+    const closeOfferHelpEvent = () => {
+        closeOfferHelp(false)
     }
 
     const clearForm = () => {
@@ -117,7 +117,7 @@ export default function OfferHelpForm(props) {
                     date: new Date()
                 })
                 clearForm()
-                closeOfferHelp()
+                closeOfferHelpEvent()
             }
             setIsLocationsLoading(false)
         }
@@ -148,7 +148,7 @@ export default function OfferHelpForm(props) {
 
     const cancel = () => {
         clearForm()
-        closeOfferHelp()
+        closeOfferHelpEvent()
     }
 
     const handleRequestCodeDialog = () => setOpenRequestCodeDialog(false)
@@ -184,11 +184,11 @@ export default function OfferHelpForm(props) {
                     code={requestCode}
                 /> : null}
             <Dialog 
-                open={props.openInd} 
+                open={openInd} 
                 onClose={closeOfferHelp} 
                 aria-labelledby="form-dialog-title"
                 TransitionComponent={Transition}>
-                <DialogTitle id="form-dialog-title">Ask for help from others.</DialogTitle>
+                <DialogTitle id="form-dialog-title">Help others who are in needs.</DialogTitle>
                 <form onSubmit={handleSubmit}>
                     <DialogContent>
                         <DialogContentText>
@@ -197,6 +197,7 @@ export default function OfferHelpForm(props) {
                             <TextField
                                 autoFocus
                                 required
+                                disabled={isLoading}
                                 margin="dense"
                                 variant="outlined"
                                 id="name"
@@ -207,6 +208,7 @@ export default function OfferHelpForm(props) {
                             />
                             <TextField
                                 required
+                                disabled={isLoading}
                                 margin="dense"
                                 variant="outlined"
                                 id="phoneNo"
@@ -218,6 +220,7 @@ export default function OfferHelpForm(props) {
                             />
                             <TextField
                                 required
+                                disabled={isLoading}
                                 multiline
                                 maxRows={5}
                                 margin="dense"
@@ -230,6 +233,7 @@ export default function OfferHelpForm(props) {
                             />
                             <TextField
                                 required
+                                disabled={isLoading}
                                 readOnly
                                 margin="dense"
                                 variant="outlined"
@@ -265,10 +269,10 @@ export default function OfferHelpForm(props) {
                             /> : null}
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={cancel} color="primary">
+                        <Button onClick={cancel} color="primary" disabled={isLoading}>
                             Cancel
                         </Button>
-                        <Button color="primary" type="submit">
+                        <Button color="primary" type="submit" disabled={isLoading}>
                             Submit
                         </Button>
                     </DialogActions>

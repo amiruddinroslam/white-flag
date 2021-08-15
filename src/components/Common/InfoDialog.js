@@ -31,7 +31,7 @@ export default function InfoDialog({ open, data, closeInfoDialog }) {
 
     const title = ({ type, fullName }) => {
         switch (type) {
-            case `Help`:
+            case `Request`:
                 return (
                     <div className="help-title">
                         {fullName} need help 🏳️
@@ -75,11 +75,13 @@ export default function InfoDialog({ open, data, closeInfoDialog }) {
     const handleEditAction = () => {
         setAction('edit')
 		setOpenAction(true)
+		closeInfoDialog(false)
     }
 
 	const handleDeleteAction = () => {
         setAction('delete')
 		setOpenAction(true)
+		closeInfoDialog(false)
     }
 
 	const handleCloseAction = () => {
@@ -121,6 +123,7 @@ export default function InfoDialog({ open, data, closeInfoDialog }) {
 								onClick={handleEditAction}
 								color="primary"
 								variant="outlined"
+								disabled
 							/>
 						</Box>
 						<Box m={1} style={{ marginLeft: 0 }}>
@@ -143,40 +146,6 @@ export default function InfoDialog({ open, data, closeInfoDialog }) {
 							</Typography>
 						</Box>
 					</Box>
-					{/* <Grid item xs={3}>
-                            <Chip
-                                icon={<DirectionsIcon />}
-                                label="Whatsapp"
-                                clickable
-                                onClick={handleDirection}
-                                color="primary"
-                            />
-                        </Grid>
-                        <Grid item xs={3}>
-                            <Chip
-                                icon={<DirectionsIcon />}
-                                label="Call"
-                                clickable
-                                onClick={handleDirection}
-                                color="primary"
-                            />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Chip
-                                icon={<DirectionsIcon />}
-                                label="Open Maps for direction"
-                                clickable
-                                onClick={handleDirection}
-                                color="primary"
-                            />
-                        </Grid> */}
-					{/* <Grid item xs={6}>
-                            <Typography variant="overline" style={{ float: 'right' }}>{formatRelative(new Date(data.time.seconds * 1000), new Date())}</Typography>
-                        </Grid> */}
-					{/* <Grid item xs={5}>
-                            <Chip avatar={<Avatar>ID</Avatar>} label={data.id} />
-                        </Grid> */}
-					{/* </Grid> */}
 				</DialogContent>
 				<DialogActions>
 					<Button

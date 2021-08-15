@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-export default function ConfirmationDialog({isOpen, handleClose, title, subtitle, data}) {
+export default function ConfirmationDialog({isOpen, handleClose, title, subtitle, data, isDeleteConfirmation}) {
     const classes = useStyles()
     const confirmation = (arg) => handleClose(arg)
 
@@ -92,10 +92,10 @@ export default function ConfirmationDialog({isOpen, handleClose, title, subtitle
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => { confirmation(false) }} color="primary">
-                        Disagree
+                        Cancel
                     </Button>
                     <Button onClick={() => { confirmation(true)} } color="primary">
-                        Agree
+                        {isDeleteConfirmation ? `Delete` : `Confirm`}
                     </Button>
                 </DialogActions>
             </Dialog>

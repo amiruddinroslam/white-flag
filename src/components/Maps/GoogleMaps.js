@@ -11,6 +11,7 @@ import Box from '@material-ui/core/Box'
 import { fetchAllHelpRequest, fetchAllOfferRequest } from './../../redux/actions/productActions'
 import InfoDialog from '../Common/InfoDialog'
 import SimpleAlert from '../Common/SimpleAlert'
+import CommonBackdrop from '../Common/CommonBackdrop'
 
 const libraries = ['places', 'geometry']
 const options = {
@@ -92,8 +93,15 @@ export default function GoogleMaps() {
 
     // const formatTime = (unix) => Date(unix)
 
-    if (loadError) { return `Error loading maps` }
-    if (!isLoaded) { return `Loading maps...` }
+    // if (loadError) { return `Error loading maps` }
+    if (loadError) {
+        return <div>Map cannot be loaded right now, sorry.</div>
+    }
+
+    // if (!isLoaded) { return `Loading maps...` }
+    if (!isLoaded) {
+        return <CommonBackdrop isOpen />
+    }
 
     return (
         <>
@@ -124,7 +132,7 @@ export default function GoogleMaps() {
                                     key={marker.id} 
                                     position={{ lat: marker.latLng.latitude, lng: marker.latLng.longitude }}
                                     onClick={() => {
-                                        setSelectedPoint({ ...marker, type: 'Help' })
+                                        setSelectedPoint({ ...marker, type: 'Request' })
                                         setOpenInfoDialog(true)
                                     }}
                                     icon={{

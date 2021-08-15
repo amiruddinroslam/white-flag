@@ -10,7 +10,7 @@ import ContactSupportIcon from '@material-ui/icons/ContactSupport'
 
 import Home from './views/Home/Home'
 import About from './views/About/About'
-import Contact from './views/Contact/Contact'
+import Instructions from './views/Instructions/Instructions'
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -49,9 +49,9 @@ function App() {
 				<About />
 				</Switch>
 			</Route>
-			<Route exact path="/contact">
+			<Route exact path="/instructions">
 				<Switch>
-				<Contact />
+				<Instructions />
 				</Switch>
 			</Route>
 			<BottomNavigation
@@ -75,9 +75,9 @@ function App() {
 				/>
 				<BottomNavigationAction
 				component={Link}
-				to="/contact"
-				label="Contact"
-				value="contact"
+				to="/instructions"
+				label="Instructions"
+				value="instructions"
 				icon={<ContactSupportIcon />}
 				/>
 			</BottomNavigation>
